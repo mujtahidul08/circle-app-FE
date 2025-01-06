@@ -91,10 +91,12 @@ export default function ThreadByUser({ token }: ThreadByUserProps) {
                   </Text>
                 </HStack>
                 <HStack display="flex" alignItems="center" onClick={() => navigate(`/replies/${thread.id}`)}>
+                <Link href={`/thread/${thread.id}`}>
                   <BiCommentDetail style={{ color: "white", fontSize: "17px" }} />
                   <Text fontWeight="medium" color="#909090" style={{ fontSize: "11px" }}>
                     {thread._count?.replies || 0} Comments
-                  </Text>
+                </Text>
+                  </Link>
                 </HStack>
               </HStack>
             </VStack>

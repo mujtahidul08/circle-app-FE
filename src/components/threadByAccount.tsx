@@ -99,17 +99,28 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
                   </Text>
                 </HStack>
                 <HStack display="flex" alignItems="center" onClick={() => navigate(`/replies/${thread.id}`)}>
+                <Link href={`/thread/${thread.id}`}>
                   <BiCommentDetail style={{ color: "white", fontSize: "17px" }} />
                   <Text fontWeight="medium" color="#909090" style={{ fontSize: "11px" }}>
                     {thread._count?.replies || 0} Comments
                   </Text>
+                  </Link>
                 </HStack>
               </HStack>
             </VStack>
           </HStack>
         ))
       ) : (
-        <Text color="white">No threads found</Text>
+        <Text 
+          w="full"
+          h="fit"
+          mt="0"
+          p="0"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          color="white"
+        >No threads found</Text>
       )}
     </Box>
   );

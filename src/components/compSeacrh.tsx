@@ -2,11 +2,13 @@ import { Box, Input, Spinner, VStack, Text, HStack, Image, Stack, Button, Link }
 import { useState } from "react";
 import axios from "axios";
 import { useSuggestedUsers } from "@/hooks/contexts/suggestedUserContext";
+import useFollowStore from "@/hooks/store/followStore";
 
-export default function CompSeacrh() {
+export default function CompSearch() {
   const [query, setQuery] = useState<string>(""); 
   const [searchResults, setSearchResults] = useState<any[]>([]); 
   const [isLoading, setIsLoading] = useState<boolean>(false); 
+  const { following, toggleFollow } = useFollowStore();
 
   // Fetch search results
   const fetchSearchResults = async (searchQuery: string) => {
@@ -20,7 +22,13 @@ export default function CompSeacrh() {
         params: { q: searchQuery }, 
       });
 
-      setSearchResults(response.data.results);
+      // Update results and check follow status from `followStore`
+      const updatedResults = response.data.results.map((user: any) => ({
+        ...user,
+        isFollow: following.some((followedUser) => followedUser.id === user.id),
+      }));
+
+      setSearchResults(updatedResults);
     } catch (error) {
       console.error("Error fetching search results:", error);
     } finally {
@@ -40,20 +48,12 @@ export default function CompSeacrh() {
     }
   };
 
-  // Toggle Follow/Following
-  const handleFollowToggle = async (userId: number) => {
+  // Handle Follow/Unfollow
+  const handleFollowClick = async (userId: number) => {
     try {
-      await axios.post(
-        `http://localhost:3000/api/profile/follow/${userId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      await toggleFollow(userId, localStorage.getItem("token")!); // Use `toggleFollow` from store
 
-      // Update local state
+      // Update local results to reflect follow/unfollow change
       setSearchResults((prevResults) =>
         prevResults.map((user) =>
           user.id === userId ? { ...user, isFollow: !user.isFollow } : user
@@ -63,45 +63,6 @@ export default function CompSeacrh() {
       console.error("Error toggling follow status:", error);
     }
   };
-  // const [query, setQuery] = useState<string>(""); 
-  // const [searchResults, setSearchResults] = useState<any[]>([]); 
-  // const [isLoading, setIsLoading] = useState<boolean>(false); 
-  // const { handleFollowToggle } = useSuggestedUsers();
-
-  // const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value;
-  //   setQuery(value);
-
-  //   if (value.trim() === "") {
-  //     setSearchResults([]);
-  //     return;
-  //   }
-
-  //   setIsLoading(true);
-
-  //   try {
-  //     const response = await axios.get("http://localhost:3000/api/search", {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`, 
-  //       },
-  //       params: { q: value }, // Kirim query parameter
-  //     });
-
-  //     setSearchResults(response.data.results);
-  //   } catch (error) {
-  //     console.error("Error fetching search results:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-  // const handleFollowClick = async (userId: number) => {
-  //   await handleFollowToggle(userId); // Call toggle function from context
-  //   setSearchResults((prevResults) =>
-  //     prevResults.map((user) =>
-  //       user.id === userId ? { ...user, isFollow: !user.isFollow } : user
-  //     )
-  //   ); // Update local searchResults state
-  // };
 
   return (
     <Box position="relative" width="100%" p="3">
@@ -119,21 +80,21 @@ export default function CompSeacrh() {
       />
       {/* Ikon */}
       <Box position="absolute" top="50%" left="20px" transform="translateY(-50%)">
-       
+        {/* Icon Placeholder */}
       </Box>
 
       {/* Loading Indicator */}
       {isLoading && <Spinner color="white" mt="4" />}
 
-      {/* Hasil Pencarian */}
+      {/* Search Results */}
       {searchResults.length > 0 && (
         <VStack mt="4" align="stretch" spaceX="3">
           {searchResults.map((user) => (
             <HStack align="center" justifyContent="space-between" width="100%" mb="10px" key={user.id}>
-                <Link href={`/profile/${user.id}`}>
+              <Link href={`/profile/${user.id}`}>
                 <HStack spaceX="2" align="center">
                   <Image
-                    src={user.avatarImage || "https://bit.ly/naruto-sage"}
+                    src={user.profile?.avatarImage || "https://bit.ly/naruto-sage"}
                     boxSize="40px"
                     borderRadius="full"
                     fit="cover"
@@ -145,46 +106,20 @@ export default function CompSeacrh() {
                     <Text color="#909090" textStyle="xs">{user.email}</Text>
                   </Stack>
                 </HStack>
-                </Link>
+              </Link>
 
-                {/* {user.isFollow ? (
-                <Button
-                  borderRadius="30px"
-                  padding="8px"
-                  borderWidth="1px"
-                  height="30px"
-                  color="#909090"
-                  textStyle="xs"
-                  onClick={() => handleFollowToggle(user.id)}
-                >
-                  Following
-                </Button>
-              ) : (
-                <Button
-                  borderRadius="30px"
-                  padding="8px"
-                  borderWidth="1px"
-                  height="30px"
-                  color="white"
-                  textStyle="xs"
-                  onClick={() => handleFollowToggle(user.id)}
-                >
-                  Follow
-                </Button>
-              )} */}
-                <Button
+              <Button
                 borderRadius="30px"
                 padding="8px"
                 borderWidth="1px"
                 height="30px"
                 color={user.isFollow ? "#909090" : "white"}
                 textStyle="xs"
-                onClick={() => handleFollowToggle(user.id)} // Use handleFollowClick
+                onClick={() => handleFollowClick(user.id)} // Use handleFollowClick
               >
                 {user.isFollow ? "Following" : "Follow"}
               </Button>
-
-              </HStack>
+            </HStack>
           ))}
         </VStack>
       )}
@@ -196,7 +131,6 @@ export default function CompSeacrh() {
     </Box>
   );
 }
-
 // import { Box, Input } from "@chakra-ui/react";
 // import { BsPersonAdd } from "react-icons/bs";
 

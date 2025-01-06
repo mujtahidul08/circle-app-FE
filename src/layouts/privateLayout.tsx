@@ -3,44 +3,83 @@ import { Box, HStack, VStack } from "@chakra-ui/react";
 import SideBar from "@/components/sideBar";
 import Suggest from "@/components/suggest";
 import ProfileUser from "@/components/profileUser";
-import { SuggestedUserProvider } from "@/hooks/contexts/suggestedUserContext";
+// import { SuggestedUserProvider } from "@/hooks/contexts/suggestedUserContext";
+import { useEffect, useState } from "react";
+import useUserStore from "@/hooks/store/userStore";
+import useFollowStore from "@/hooks/store/followStore";
+import { fetchFollowers, fetchFollowing } from "@/features/dashboard/services/profile.services";
 
-interface PrivateLayoutProps {
-    user: any; 
-  }
+export default function PrivateLayout() {
+  const { fetchSuggestedUsers, updateCounts,updateFollowers,updateFollowing} = useFollowStore();
+  const [loadingSuggestedUsers, setLoadingSuggestedUsers] = useState(true);
+  const { token, user, fetchProfile } = useUserStore();
+  
 
-export default function PrivateLayout({ user }: PrivateLayoutProps){
+  useEffect(() => {
+    const loadSuggestedUsers = async () => {
+      try {
+        if (!token) {
+          console.error("No token found, user is not authenticated");
+          return;
+        }
+        await fetchProfile(token!)
+        await fetchSuggestedUsers(); 
+        const fetchedFollowers = await fetchFollowers(token);
+        console.log("Fetched Followers:", fetchedFollowers);
+        updateFollowers(fetchedFollowers); // Update followers di store
+        const fetchedFollowing = await fetchFollowing(token);
+        updateFollowing(fetchedFollowing)
+        updateCounts()// Pastikan jumlah followers dan following diperbarui setelah data fetch
+      } catch (error) {
+        console.error("Error fetching suggested users:", error);
+      } finally {
+        setLoadingSuggestedUsers(false);
+      }
+    };
 
-    
-    return(
-        <SuggestedUserProvider>
-        <div>
-            <HStack gap="0" m="0" p="0" w="full" h="full">
-                {/* Sidebar */}
-                <Box flex="2"  height="100vh" borderRightWidth="1px" borderColor="#3F3F3F" position="sticky"
-                top="0" left="0" overflow="auto">
-                <SideBar />
-                </Box>
+    loadSuggestedUsers();
+  }, [token, updateFollowers, updateFollowing,updateCounts, fetchSuggestedUsers,fetchProfile]);
 
-                {/* Main Content */}
-                <Box flex="5" height="100vh" overflowY="auto" scrollbar="hidden" scrollBehavior="smooth">
-                    {/* <h3 className="text-3xl text-white p-3 font-medium">Home</h3>  */}
-                    <main>
-                        <Outlet/>
-                    </main>
-                </Box>
+  return (
+    <div>
+      <HStack gap="0" m="0" p="0" w="full" h="full">
+        {/* Sidebar */}
+        <Box
+          flex="2"
+          height="100vh"
+          borderRightWidth="1px"
+          borderColor="#3F3F3F"
+          position="sticky"
+          top="0"
+          left="0"
+          overflow="auto"
+        >
+          <SideBar />
+        </Box>
 
-                {/* Right Profile */}
-                <Box flex="3" height="100vh" p="4" borderLeftWidth="1px" borderColor="#3F3F3F" position="sticky"
-                top="0">
-                <VStack  align="stretch">
-                <ProfileUser user={user} />
-                <Suggest />
-                {/* <DescDev /> */}
-                </VStack>
-                </Box>
-            </HStack>
-        </div>
-        </SuggestedUserProvider>
-    )
+        {/* Main Content */}
+        <Box flex="5" height="100vh" overflowY="auto" scrollbar="hidden" scrollBehavior="smooth">
+          <main>
+            <Outlet />
+          </main>
+        </Box>
+
+        {/* Right Profile */}
+        <Box
+          flex="3"
+          height="100vh"
+          p="4"
+          borderLeftWidth="1px"
+          borderColor="#3F3F3F"
+          position="sticky"
+          top="0"
+        >
+          <VStack align="stretch">
+            {user && <ProfileUser user={user} />} {/* Render profile jika user ada */}
+            <Suggest />
+          </VStack>
+        </Box>
+      </HStack>
+    </div>
+  );
 }

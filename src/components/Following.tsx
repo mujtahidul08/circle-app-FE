@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { Button, HStack, Image, Stack, Text } from "@chakra-ui/react";
-import { Follower } from "@/types/profile.types";
-import { fetchFollowers, fetchFollowing } from "@/features/dashboard/services/profile.services";
+import { Button, HStack, Image, Link, Stack, Text } from "@chakra-ui/react";
+// import { Follower } from "@/types/profile.types";
+import { fetchFollowing } from "@/features/dashboard/services/profile.services";
+// import useUserStore from "@/hooks/store/userStore";
+import useFollowStore from "@/hooks/store/followStore";
 
 interface FollowingProps {
   token: string | null;
 }
 
 export default function Following({ token }: FollowingProps) {
-  const [following, setFollowing] = useState<Follower[]>([]);
+  const { following, updateFollowing, toggleFollow,updateCounts } = useFollowStore();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -20,8 +22,10 @@ export default function Following({ token }: FollowingProps) {
 
       try {
         setLoading(true);
-        const fetchedFollowing = await fetchFollowing(token); // Ambil data following
-        setFollowing(fetchedFollowing);
+        const fetchedFollowing = await fetchFollowing(token);
+        updateFollowing(fetchedFollowing); // Memperbarui following di store
+        console.log("following:",fetchedFollowing);
+        updateCounts();  // Memperbarui count followers dan following
       } catch (error) {
         console.error("Error fetching following:", error);
       } finally {
@@ -30,62 +34,60 @@ export default function Following({ token }: FollowingProps) {
     };
 
     getFollowing();
-  }, [token]);
+  }, [token, updateFollowing, updateCounts]);
 
-  const toggleFollow = (id: number) => {
-    const updatedFollowing = following.map((user) =>
-      user.id === id ? { ...user, isFollow: !user.isFollow } : user
-    );
-    setFollowing(updatedFollowing);
+  const handleToggleFollow = async (id: number) => {
+    if (!token) {
+      console.error("No token found, unable to toggle follow.");
+      return;
+    }
+
+    await toggleFollow(id, token); // Gunakan fungsi toggleFollow dari store
   };
 
   if (loading) return <Text>Loading...</Text>;
+
+  if (following.length === 0) {
+    return (
+      <Text fontSize="lg" color="white" textAlign="center" mt="5">
+        You currently have no following. Share your profile to grow your network!
+      </Text>
+    );
+  }
 
   return (
     <>
       {following.map((account, index) => (
         <HStack align="center" justifyContent="space-between" width="100%" mb="10px" key={index}>
-          <HStack spaceX="2" align="center">
-            <Image
-              src={account.image}
-              boxSize="40px"
-              borderRadius="full"
-              fit="cover"
-            />
-            <Stack spaceX="-1.5">
-              <Text fontWeight="medium" textStyle="sm" color="white">
-                {account.username}
-              </Text>
-              <Text color="#909090" textStyle="xs">
-                {account.email}
-              </Text>
-            </Stack>
-          </HStack>
-          {account.isFollow ? (
-            <Button
-              onClick={() => toggleFollow(account.id)}
-              borderRadius="30px"
-              padding="8px"
-              borderWidth="1px"
-              height="30px"
-              color="#909090"
-              textStyle="xs"
-            >
-              Following
-            </Button>
-          ) : (
-            <Button
-              onClick={() => toggleFollow(account.id)}
-              borderRadius="30px"
-              padding="8px"
-              borderWidth="1px"
-              height="30px"
-              color="white"
-              textStyle="xs"
-            >
-              Follow
-            </Button>
-          )}
+          <Link href={`/profile/${account.id}`}>
+            <HStack spaceX="2" align="center">
+              <Image
+                src={account.image || "https://bit.ly/naruto-sage"}
+                boxSize="40px"
+                borderRadius="full"
+                fit="cover"
+              />
+              <Stack spaceX="-1.5">
+                <Text fontWeight="medium" textStyle="sm" color="white">
+                  {account.username}
+                </Text>
+                <Text color="#909090" textStyle="xs">
+                  {account.email}
+                </Text>
+              </Stack>
+            </HStack>
+          </Link>
+          <Button
+            onClick={() => handleToggleFollow(account.id)}
+            borderRadius="30px"
+            padding="8px"
+            borderWidth="1px"
+            height="30px"
+            color={account.isFollowed ? "#909090" : "white"}
+            textStyle="xs"
+          >
+            {account.isFollowed ? "Following" : "Follow"}
+          </Button>
         </HStack>
       ))}
     </>

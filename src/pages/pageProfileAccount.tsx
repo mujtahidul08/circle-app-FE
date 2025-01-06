@@ -11,12 +11,14 @@ import { useParams } from "react-router-dom";
 import ProfileAccount from "@/components/profileAccount";
 import ThreadByAccount from "@/components/threadByAccount";
 import ImageByAccount from "@/components/imageByAccount";
+import useFollowStore from "@/hooks/store/followStore";
 
 export default function PageProfileAccount() {
   const { token } = useUserStore(); // Ambil token dari global state
   const { authorId } = useParams<{ authorId: string }>();
   const [profileData, setProfileData] = useState<userType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { updateCounts } = useFollowStore(); // Import updateCounts dari followStore
 
   useEffect(() => {
     // Ambil data profil user berdasarkan `authorId`
@@ -33,6 +35,9 @@ export default function PageProfileAccount() {
       });
       console.log("Profile data:", response.data);
       setProfileData(response.data);
+
+      // Update jumlah followers dan following setelah profil berhasil dimuat
+      updateCounts();
     } catch (error) {
       console.error("Failed to fetch profile data", error);
     } finally {
@@ -98,11 +103,18 @@ export default function PageProfileAccount() {
               </Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="post" mt="0">
-              {authorId?<ThreadByAccount authorId={authorId} />:<Text>No authorId</Text>}
+              {authorId ? (
+                <ThreadByAccount authorId={authorId} />
+              ) : (
+                <Text>No authorId</Text>
+              )}
             </Tabs.Content>
             <Tabs.Content value="image" mt="0">
-            {authorId?<ImageByAccount authorId={authorId} />:<Text>No authorId</Text>}
-              
+              {authorId ? (
+                <ImageByAccount authorId={authorId} />
+              ) : (
+                <Text>No authorId</Text>
+              )}
             </Tabs.Content>
           </Tabs.Root>
         </>

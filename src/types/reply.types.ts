@@ -1,4 +1,4 @@
-export type RepliesType = {
+export type ReplyType = {
   id: number;
   content: string;
   image?: string;

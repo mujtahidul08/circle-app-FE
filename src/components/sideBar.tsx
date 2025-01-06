@@ -6,6 +6,7 @@ import { RiUserFollowLine } from "react-icons/ri";
 import { TbLogout2 } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import DialogPost from "./dialogPost";
+import Suggest from "./suggest";
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -52,7 +53,6 @@ export default function SideBar() {
           >
             <TbLogout2 style={{ color: "white", fontSize: "15px" }} /> Logout
           </Box>
-
       </Stack>
     </Box>
   );

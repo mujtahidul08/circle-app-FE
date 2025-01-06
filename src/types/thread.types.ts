@@ -1,20 +1,21 @@
-export interface ThreadsType {
-  id: number;
-  authorId: number;
-  createdAt: string;
-  updatedAt: string;
+export type ThreadsType = {
+  id: string;
   content: string;
   image?: string;
+  createdAt: string;
+  updatedAt?: string;
+  authorId: string; 
   author: {
-      username: string;
-      email: string;
-      profile?: {
-          avatarImage?: string;
-      };
+    id: string;
+    username: string;
+    email: string;
+    profile?: {
+      avatarImage?: string;
+    };
   };
-  _count: {
-      like: number;
-      replies: number;
+  isLike?: boolean;
+  _count?: {
+    like?: number;
+    replies?: number;
   };
-  isLike: boolean; 
-}
+};

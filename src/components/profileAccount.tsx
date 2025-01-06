@@ -42,6 +42,14 @@ export default function ProfileAccount({ user }: { user: any }) {
         </Text>
 
         <HStack>
+        <HStack>
+            <Text fontWeight="medium" textStyle="xs" color="white">
+            {user?.following?.length || 0}
+            </Text>
+            <Text color="#909090" textStyle="xs">
+              Followers
+            </Text>
+          </HStack>
           <HStack>
             <Text fontWeight="medium" textStyle="xs" color="white">
             {user?.follower?.length || 0}
@@ -50,14 +58,7 @@ export default function ProfileAccount({ user }: { user: any }) {
               Following
             </Text>
           </HStack>
-          <HStack>
-            <Text fontWeight="medium" textStyle="xs" color="white">
-            {user?.following?.length || 0}
-            </Text>
-            <Text color="#909090" textStyle="xs">
-              Followers
-            </Text>
-          </HStack>
+          
         </HStack>
       </Box>
     </>

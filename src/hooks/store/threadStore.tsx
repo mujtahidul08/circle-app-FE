@@ -1,39 +1,62 @@
 import { create } from 'zustand';
+import axios, { AxiosResponse } from 'axios';
+import { apiURL } from '@/utils/baseurl';
 import { ThreadsType } from '@/types/thread.types';
-import axios from 'axios';
-
-type Thread = {
-  id: string;
-  content: string;
-  image?: string;
-  createdAt: string;
-  author: {
-    id: string;
-    username: string;
-    email: string;
-    profile?: {
-      avatarImage?: string;
-    };
-  };
-  _count?: {
-    like?: number;
-    replies?: number;
-  };
-  isLike?: boolean;
-};
 
 type ThreadState = {
-  threads: Thread[];
-  currentThread: Thread | null;
-  setThreads: (threads: Thread[]) => void;
-  setCurrentThread: (thread: Thread) => void;
+  threads: ThreadsType[];
+  currentThread: ThreadsType | null;
+  fetchThreads: (token: string) => Promise<void>;
+  clearThread: () => void;
+  toggleLikeThread: (args: ToggleLikeThreadArgs) => void;  // Perbarui tipe parameter
+  setThreads: (threads: ThreadsType[]) => void;
+  setCurrentThread: (thread: ThreadsType) => void;
+};
+
+type ToggleLikeThreadArgs = {
+  threadId: string;
+  liked: boolean;
+  likeCount: number;
 };
 
 export const useThreadStore = create<ThreadState>((set) => ({
   threads: [],
   currentThread: null,
+  async fetchThreads(token) {
+    try {
+      const response = await axios.get(apiURL + 'api/thread', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log('Fetched replies:', response.data); 
+      // Hanya set threads dari response.data.threads
+      set({ threads: response.data.threads });
+    } catch (error) {
+      console.error('Failed to fetch threads:', error);
+    }
+  },
+  clearThread() {
+    set({ currentThread: null });
+  },
+  toggleLikeThread({ threadId, liked, likeCount }: ToggleLikeThreadArgs) {
+    set((state) => ({
+      threads: state.threads.map((thread) =>
+        thread.id === threadId
+          ? { 
+              ...thread, 
+              isLike: liked, 
+              _count: { 
+                ...thread._count, 
+                like: likeCount 
+              } 
+            }
+          : thread
+      ),
+    }));
+  },
   setThreads: (threads) => set({ threads }),
+  
   setCurrentThread: (thread) => set({ currentThread: thread }),
+  
 }));
 
 //=====

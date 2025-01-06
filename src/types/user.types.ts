@@ -1,12 +1,13 @@
 export interface userType {
-  id: string;
+  id: number;
   username: string;
   email: string;
   profile?: {
     bio?: string;
     avatarImage?: string;
     backgroundImage?: string;
-  };
+  }|null;
   followers?: number;
   following?: number;
+  isFollowed?: boolean;
 };
