@@ -12,7 +12,9 @@
     "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+     "postinstall": "husky install || echo 'Skipping husky installation on Vercel'",
+     "start": "nodemon app/server.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.2.5",
