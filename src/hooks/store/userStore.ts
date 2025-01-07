@@ -69,57 +69,6 @@ const useUserStore = create<userState>((set) => ({
         throw new Error("Failed to fetch profile");
       }
     },
-    // fetchProfile: async (token) => {
-  //   try {
-  //     const response = await axios.get(apiURL + "api/profile", {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-
-  //     set((state) => ({
-  //       user: { ...state.user, ...response.data },
-  //     }));
-  //   } catch (error) {
-  //     console.error("Failed to fetch profile data:", error);
-  //     throw new Error("Failed to fetch profile");
-  //   }
-  // },
 }));
 export default useUserStore;
 
-// interface userState {
-//   user: userType | null;
-//   token: string | null;
-//   setUser: (user: userType) => void;
-//   setToken: (token: string) => void;
-//   clearUser: () => void;
-//   updateFollowers: (followers: number) => void;
-//   updateFollowing: (following: number) => void;
-// }
-
-// const useUserStore = create<userState>((set) => ({
-//   user: JSON.parse(localStorage.getItem("user") || "null"),
-//   token: localStorage.getItem("token") || null,
-//   setUser: (user) => {
-//     localStorage.setItem("user", JSON.stringify(user));
-//     set({ user });
-//   },
-//   setToken: (token) => {
-//     localStorage.setItem("token", token);
-//     set({ token });
-//   },
-//   clearUser: () => {
-//     localStorage.removeItem("user");
-//     localStorage.removeItem("token");
-//     set({ user: null, token: null });
-//   },
-//   updateFollowers: (followers) =>
-//     set((state) => ({
-//       user: state.user ? { ...state.user, followers } : null,
-//     })),
-//   updateFollowing: (following) =>
-//     set((state) => ({
-//       user: state.user ? { ...state.user, following } : null,
-//     }))
-// }));
-
-// export default useUserStore;

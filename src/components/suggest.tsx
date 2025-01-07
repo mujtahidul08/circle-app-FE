@@ -6,7 +6,7 @@ import { Box, Button, HStack, Image, Link, Stack, Text, VStack } from "@chakra-u
 import { useState } from "react";
 
 export default function Suggest() {
-  const { suggestedUsers, toggleFollow, updateData } = useFollowStore();
+  const { suggestedUsers, toggleFollow } = useFollowStore();
   const { token } = useUserStore();
   const [loading, setLoading] = useState(false);
 
@@ -30,19 +30,19 @@ export default function Suggest() {
   };
 
   return (
-    <Box padding="10px" bgColor="#262626" borderRadius="10px" mb="5px">
+    <Box padding="10px" bgColor="#262626" borderRadius="10px" mb="5px" h="400px" overflowY="auto" scrollBehavior="smooth" scrollbar="hidden" w="full" >
       <h3 className="text-lg text-white mb-2">Suggested for you</h3>
       {suggestedUsers.map((account) => (
-        <HStack align="center" justifyContent="space-between" width="100%" mb="10px" key={account.id}>
-          <HStack spaceX="4" align="center" >
+        <HStack align="center" justifyContent="space-between" width="100%" mb="15px" key={account.id}>
+          <HStack align="center">
             <Link href={`/profile/${account.id}`}>
               <Image
-                src={account.avatar || "https://bit.ly/naruto-sage"}
+                src={account.profile?.avatarImage || "https://bit.ly/naruto-sage"}
                 boxSize="40px"
                 borderRadius="full"
                 fit="cover"
               />
-              <VStack align="start" spaceY="-1">
+              <VStack align="left" marginLeft="3" spaceY="-1">
                 <Text fontWeight="medium" textStyle="sm" color="white">
                   {account.username}
                 </Text>

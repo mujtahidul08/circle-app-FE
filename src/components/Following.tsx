@@ -60,14 +60,14 @@ export default function Following({ token }: FollowingProps) {
       {following.map((account, index) => (
         <HStack align="center" justifyContent="space-between" width="100%" mb="10px" key={index}>
           <Link href={`/profile/${account.id}`}>
-            <HStack spaceX="2" align="center">
+            <HStack align="center">
               <Image
                 src={account.image || "https://bit.ly/naruto-sage"}
                 boxSize="40px"
                 borderRadius="full"
                 fit="cover"
               />
-              <Stack spaceX="-1.5">
+              <Stack marginLeft="2" spaceY="-1">
                 <Text fontWeight="medium" textStyle="sm" color="white">
                   {account.username}
                 </Text>

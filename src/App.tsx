@@ -9,7 +9,6 @@ import Forgot from './pages/forgot';
 import PrivateRoute from './routes/privateRoute';
 import Follows from './pages/follows';
 import Search from './pages/search';
-import DetailImage from './pages/detailImage';
 import UserProvider from './hooks/contexts/userContexts';
 import useUserStore from './hooks/store/userStore';
 import { useEffect, useState } from 'react';
@@ -54,7 +53,6 @@ export default function App() {
             <Route path="/profile/:authorId" element={<PageProfileHandler />} />
             <Route path="/search" element={<Search />} />
             <Route path="/thread/:id" element={<DetailThread/>} />
-            <Route path="/detailImage/:id" element={<DetailImage />} />
           </Route>
         </Routes>
       </UserProvider>

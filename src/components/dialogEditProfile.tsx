@@ -24,7 +24,7 @@ export default function DialogEditProfile({ user }: { user: any }) {
   const [username, setUsername] = useState<string>(user?.username || "");
   const [email, setEmail] = useState<string>(user?.email || "");
   const [bio, setBio] = useState<string>(user?.profile?.bio || "");
-
+  console.log("user edit",user)
   // States for file uploads
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
@@ -76,6 +76,7 @@ export default function DialogEditProfile({ user }: { user: any }) {
       // Kirim formData ke API
       const response = await updateProfile(token, formData);
       await fetchProfile(token); 
+      
       Swal.fire({
         icon: "success",
         title: "Profile Saved!",

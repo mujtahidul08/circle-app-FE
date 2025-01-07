@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { apiURL } from '@/utils/baseurl';
 import { ThreadsType } from '@/types/thread.types';
 
@@ -7,10 +7,13 @@ type ThreadState = {
   threads: ThreadsType[];
   currentThread: ThreadsType | null;
   fetchThreads: (token: string) => Promise<void>;
+  fetchThreadDetail: (id: string) => Promise<void>;
   clearThread: () => void;
-  toggleLikeThread: (args: ToggleLikeThreadArgs) => void;  // Perbarui tipe parameter
+  toggleLikeThread: (args: ToggleLikeThreadArgs) => void;  
   setThreads: (threads: ThreadsType[]) => void;
   setCurrentThread: (thread: ThreadsType) => void;
+  deleteThread:(threadId: number, token: string)  => void;
+  updateThread: (threadId: number, formData: FormData, token: string) => void;
 };
 
 type ToggleLikeThreadArgs = {
@@ -34,29 +37,116 @@ export const useThreadStore = create<ThreadState>((set) => ({
       console.error('Failed to fetch threads:', error);
     }
   },
+  async fetchThreadDetail(id: string) {
+    try {
+      const response = await axios.get(`${apiURL}api/thread/${id}`);
+      set({ currentThread: response.data.thread });
+    } catch (error) {
+      console.error('Failed to fetch thread detail:', error);
+    }
+  },
   clearThread() {
     set({ currentThread: null });
   },
+
   toggleLikeThread({ threadId, liked, likeCount }: ToggleLikeThreadArgs) {
     set((state) => ({
       threads: state.threads.map((thread) =>
-        thread.id === threadId
-          ? { 
-              ...thread, 
-              isLike: liked, 
-              _count: { 
-                ...thread._count, 
-                like: likeCount 
-              } 
+        thread.id === Number(threadId)
+          ? {
+              ...thread,
+              isLike: liked,
+              _count: { ...thread._count, like: likeCount },
             }
           : thread
       ),
+      currentThread:
+        state.currentThread?.id === Number(threadId)
+          ? {
+              ...state.currentThread,
+              isLike: liked,
+              _count: { ...state.currentThread._count, like: likeCount },
+            }
+          : state.currentThread,
     }));
   },
+  // toggleLikeThread({ threadId, liked, likeCount }: ToggleLikeThreadArgs) {
+  //   set((state) => ({
+  //     threads: state.threads.map((thread) =>
+  //       thread.id === Number(threadId)
+  //         ? {
+  //             ...thread,
+  //             isLike: liked,
+  //             _count: {
+  //               ...thread._count,
+  //               like: likeCount,
+  //             },
+  //           }
+  //         : thread
+  //     ),
+  //     currentThread: state.currentThread?.id === Number(threadId)
+  //       ? {
+  //           ...state.currentThread,
+  //           isLike: liked,
+  //           _count: {
+  //             ...state.currentThread._count,
+  //             like: likeCount,
+  //           },
+  //         }
+  //       : state.currentThread,
+  //   }));
+  // },
+
+  // toggleLikeThread({ threadId, liked, likeCount }: ToggleLikeThreadArgs) {
+  //   set((state) => ({
+  //     threads: state.threads.map((thread) =>
+  //       thread.id === Number(threadId)
+  //         ? { 
+  //             ...thread, 
+  //             isLike: liked, 
+  //             _count: { 
+  //               ...thread._count, 
+  //               like: likeCount 
+  //             } 
+  //           }
+  //         : thread
+  //     ),
+  //   }));
+  // },
   setThreads: (threads) => set({ threads }),
   
   setCurrentThread: (thread) => set({ currentThread: thread }),
-  
+  async deleteThread(threadId: number, token: string) {
+    try {
+      await axios.delete(`${apiURL}api/thread/${threadId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set((state) => ({
+        threads: state.threads.filter((thread) => thread.id !== threadId),
+      }));
+    } catch (error) {
+      console.error("Failed to delete thread:", error);
+      throw error;
+    }
+  },
+  updateThread: async (threadId: number, formData: FormData, token: string) => {
+    try {
+      const response = await axios.put(`${apiURL}api/thread/${threadId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      set((state) => ({
+        threads: state.threads.map((thread) =>
+          thread.id === threadId ? response.data.thread : thread
+        ),
+      }));
+    } catch (error) {
+      console.error('Failed to update thread:', error);
+      throw error;
+    }
+  }
 }));
 
 //=====

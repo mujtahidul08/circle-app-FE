@@ -1,8 +1,10 @@
 import { getAllByAccount } from "@/features/dashboard/services/profile.services";
+import { useThreadStore } from "@/hooks/store/threadStore";
 import useUserStore from "@/hooks/store/userStore";
 import { ThreadsType } from "@/types/thread.types";
 import { getRelativeTime } from "@/utils/getRelativeTimes";
 import { Box, HStack, Image, Link, Text, VStack } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { BiCommentDetail } from "react-icons/bi";
 import { FaRegHeart } from "react-icons/fa";
@@ -17,12 +19,13 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
   const [threads, setThreads] = useState<ThreadsType[]>([]);
   const navigate = useNavigate();
   const { token } = useUserStore()
+  const { toggleLikeThread} = useThreadStore();
 
   useEffect(() => {
     if (authorId && token) {
       retrieveAllThreads();
     }
-  }, [authorId, token]);
+  }, [authorId, token,toggleLikeThread]);
 
   const retrieveAllThreads = async () => {
     try {
@@ -35,6 +38,28 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
   
     } catch (error) {
       console.error("Error fetching threads:", error);
+    }
+  };
+
+  const handleLike = async (threadId: number) => {
+    if (!token) {
+      console.error("Token is null. Cannot toggle like.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/thread/like/${threadId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toggleLikeThread({
+        threadId: response.data.threadId,
+        liked: response.data.liked,
+        likeCount: response.data.likeCount,
+      });
+    } catch (error) {
+      console.error("Failed to toggle like:", error);
     }
   };
 
@@ -63,7 +88,7 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
               fit="cover"
               alignSelf="flex-start"
             />
-            <VStack align="start" gap="1">
+            <VStack align="start" gap="1" w="full">
               <HStack>
                 <Text fontWeight="medium" textStyle="sm" color="white">
                   {thread.author?.username}
@@ -75,7 +100,7 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
                   • {getRelativeTime(thread.createdAt)}
                 </Text>
               </HStack>
-              <VStack>
+              <VStack w="full" align="left">
                 <Link href={`/thread/${thread.id}`}>
                   <Text fontWeight="350" style={{ fontSize: "13px", textAlign: "justify" }} color="white">
                     {thread.content}
@@ -83,19 +108,24 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
                 </Link>
                 {thread.image && (
                   <Link href="/DetailImage">
-                    <Image src={thread.image} borderRadius="10px" w="full" />
+                    <Image src={thread.image} borderRadius="10px" w="93%" h="80%"/>
                   </Link>
                 )}
               </VStack>
               <HStack gap="7" display="flex" alignItems="center">
-                <HStack display="flex" alignItems="center" cursor="pointer">
-                  {thread.isLike ? (
+                <HStack
+                  display="flex"
+                  alignItems="center"
+                  onClick={() => handleLike(Number(thread?.id))}
+                  cursor="pointer"
+                >
+                  {thread?.isLike ? (
                     <FcLike style={{ color: "white", fontSize: "17px" }} />
                   ) : (
                     <FaRegHeart style={{ color: "white", fontSize: "17px" }} />
                   )}
                   <Text fontWeight="medium" color="#909090" style={{ fontSize: "11px" }}>
-                    {thread._count?.like || 0}
+                    {thread?._count?.like || 0}
                   </Text>
                 </HStack>
                 <HStack display="flex" alignItems="center" onClick={() => navigate(`/replies/${thread.id}`)}>

@@ -60,14 +60,14 @@ export default function Followers({ token }: FollowersProps) {
       {followers.map((account) => (
         <HStack align="center" justifyContent="space-between" width="100%" mb="10px" key={account.id}>
           <Link href={`/profile/${account.id}`}>
-            <HStack spaceX="2" align="center">
+            <HStack align="center">
               <Image
                 src={account.image || "/default-avatar.png"}
                 boxSize="40px"
                 borderRadius="full"
                 fit="cover"
               />
-              <Stack spaceX="-1.5">
+              <Stack marginLeft="2" spaceY="-1">
                 <Text fontWeight="medium" textStyle="sm" color="white">
                   {account.username}
                 </Text>

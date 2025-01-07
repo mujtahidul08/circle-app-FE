@@ -65,7 +65,7 @@ export default function CompSearch() {
   };
 
   return (
-    <Box position="relative" width="100%" p="3">
+    <Box position="relative" width="100%" p="3" >
       {/* Input Field */}
       <Input
         placeholder="Search your friends"
@@ -88,7 +88,7 @@ export default function CompSearch() {
 
       {/* Search Results */}
       {searchResults.length > 0 && (
-        <VStack mt="4" align="stretch" spaceX="3">
+        <VStack mt="4" align="stretch" w="full">
           {searchResults.map((user) => (
             <HStack align="center" justifyContent="space-between" width="100%" mb="10px" key={user.id}>
               <Link href={`/profile/${user.id}`}>
@@ -131,21 +131,3 @@ export default function CompSearch() {
     </Box>
   );
 }
-// import { Box, Input } from "@chakra-ui/react";
-// import { BsPersonAdd } from "react-icons/bs";
-
-// export default function CompSeacrh(){
-//     return(
-//         <>
-//         <Box position="relative" width="100%" p="3">
-//             {/* Input Field */}
-//             <Input placeholder="Search your friends" paddingLeft="50px" color="white" borderRadius="20px" borderWidth="1px" borderColor="#04A51E" bgColor="#3F3F3F"/>
-//             {/* Ikon */}
-//             <Box position="absolute" top="50%" left="20px" transform="translateY(-50%)">
-//                 <BsPersonAdd style={{ color: "gray", fontSize: "20px" }} />
-//             </Box>
-//         </Box>
-//         </>
-//     )
-
-// }

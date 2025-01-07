@@ -7,6 +7,7 @@ export type ReplyType = {
   likes: Array<string>;
   replies: Array<string>;
   isLike: boolean;
+  likeCount?: number;
   author: {
     username: string;
     email: string;

@@ -1,12 +1,12 @@
 export type ThreadsType = {
-  id: string;
+  id: number;
   content: string;
   image?: string;
   createdAt: string;
   updatedAt?: string;
   authorId: string; 
   author: {
-    id: string;
+    id: number;
     username: string;
     email: string;
     profile?: {

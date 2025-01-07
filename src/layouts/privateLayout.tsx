@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import useUserStore from "@/hooks/store/userStore";
 import useFollowStore from "@/hooks/store/followStore";
 import { fetchFollowers, fetchFollowing } from "@/features/dashboard/services/profile.services";
+import { ChakraProvider } from '@chakra-ui/react';
+
 
 export default function PrivateLayout() {
   const { fetchSuggestedUsers, updateCounts,updateFollowers,updateFollowing} = useFollowStore();
@@ -30,6 +32,7 @@ export default function PrivateLayout() {
         const fetchedFollowing = await fetchFollowing(token);
         updateFollowing(fetchedFollowing)
         updateCounts()// Pastikan jumlah followers dan following diperbarui setelah data fetch
+        
       } catch (error) {
         console.error("Error fetching suggested users:", error);
       } finally {
@@ -41,7 +44,7 @@ export default function PrivateLayout() {
   }, [token, updateFollowers, updateFollowing,updateCounts, fetchSuggestedUsers,fetchProfile]);
 
   return (
-    <div>
+    <>
       <HStack gap="0" m="0" p="0" w="full" h="full">
         {/* Sidebar */}
         <Box
@@ -76,10 +79,11 @@ export default function PrivateLayout() {
         >
           <VStack align="stretch">
             {user && <ProfileUser user={user} />} {/* Render profile jika user ada */}
-            <Suggest />
+            <Suggest/>
           </VStack>
         </Box>
       </HStack>
-    </div>
+      
+    </>
   );
 }

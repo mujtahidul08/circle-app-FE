@@ -33,7 +33,6 @@ export default function ImageByUser({ token }: ImageByUserProps) {
       {images.length > 0 ? (
         <Grid templateColumns="repeat(3, 1fr)" gap={2}>
           {images.map((image, index) => (
-            <Link key={index} href="/DetailImage">
               <Image
                 src={image}
                 borderRadius="5px"
@@ -42,7 +41,6 @@ export default function ImageByUser({ token }: ImageByUserProps) {
                 objectFit="cover"
                 alt={`User uploaded image ${index + 1}`}
               />
-            </Link>
           ))}
         </Grid>
       ) : (

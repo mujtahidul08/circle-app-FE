@@ -43,12 +43,12 @@ const useFollowStore = create<FollowStore>((set, get) => ({
           Authorization: `Bearer ${token}`,
         },
       });
-      set({ suggestedUsers: response.data.users.slice(0, 5) });
+      set({ suggestedUsers: response.data.users.slice(0, 50) });
     } catch (error) {
       console.error("Failed to fetch suggested users", error);
     }
   },
-
+  
   toggleFollow: async (userId, token) => {
     try {
       const response = await axios.post(
@@ -64,10 +64,7 @@ const useFollowStore = create<FollowStore>((set, get) => ({
       const { followed } = response.data;
   
       set((state) => {
-        const updatedSuggestedUsers = state.suggestedUsers.map((user) =>
-          user.id === userId ? { ...user, isFollowed: followed } : user
-        );
-  
+        const updatedSuggestedUsers = state.suggestedUsers.filter((user) => user.id !== userId);
         const updatedFollowing = followed
           ? [...state.following, state.suggestedUsers.find((user) => user.id === userId)!]
           : state.following.filter((user) => user.id !== userId);
@@ -78,13 +75,49 @@ const useFollowStore = create<FollowStore>((set, get) => ({
         };
       });
   
-      await get().fetchFollowCounts(); 
-      get().updateCounts(); // Perbarui jumlah setelah fetch
+      await get().fetchFollowCounts();
+      get().updateCounts();
     } catch (error) {
       console.error("Error toggling follow status:", error);
     }
   },
 
+  // toggleFollow: async (userId, token) => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${apiURL}api/profile/follow/${userId}`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  
+  //     const { followed } = response.data;
+  
+  //     set((state) => {
+  //       const updatedSuggestedUsers = state.suggestedUsers.map((user) =>
+  //         user.id === userId ? { ...user, isFollowed: followed } : user
+  //       );
+  
+  //       const updatedFollowing = followed
+  //         ? [...state.following, state.suggestedUsers.find((user) => user.id === userId)!]
+  //         : state.following.filter((user) => user.id !== userId);
+  
+  //       return {
+  //         suggestedUsers: updatedSuggestedUsers,
+  //         following: updatedFollowing,
+  //       };
+  //     });
+  
+  //     await get().fetchFollowCounts(); 
+  //     get().updateCounts(); // Perbarui jumlah setelah fetch
+  //   } catch (error) {
+  //     console.error("Error toggling follow status:", error);
+  //   }
+  // },
+  
   updateCounts: () =>
     set((state) => ({
       followersCount: state.followers.length,
