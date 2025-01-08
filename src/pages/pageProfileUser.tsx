@@ -84,11 +84,11 @@ export default function PageProfileUser() {
               </Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="post" mt="0">
-              {token ? (
-                <ThreadByUser token={token} />
-              ) : (
-                <p className="text-white">Token not found</p>
-              )}
+            {token ? (
+              <ThreadByUser token={token} user={user} />
+            ) : (
+              <p className="text-white">Token not found</p>
+            )}
             </Tabs.Content>
             <Tabs.Content value="image" mt="0">
               {token ? (

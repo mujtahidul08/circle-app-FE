@@ -26,7 +26,7 @@ export default function DialogCreateReply({
   const [content, setContent] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null); // Tambahkan state untuk preview image
-  const { token} = useUserStore();
+  const { user, token} = useUserStore();
   const { addReply } = useReplyStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -73,7 +73,7 @@ export default function DialogCreateReply({
     <DialogRoot>
       <DialogTrigger asChild>
         <HStack gap="2" padding="3" display="flex" align="center" borderBottomWidth="1px" borderColor="#3F3F3F">
-          <Image src='https://bit.ly/naruto-sage' boxSize="40px" borderRadius="full" fit="cover" />
+          <Image src={user?.profile?.avatarImage || 'https://bit.ly/naruto-sage'} boxSize="40px" borderRadius="full" fit="cover" />
           <Input
             padding="1"
             placeholder="Reply this thread?!"

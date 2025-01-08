@@ -9,12 +9,17 @@ import { BiCommentDetail } from "react-icons/bi";
 import { FaRegHeart } from "react-icons/fa";
 import { FcLike } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
+import DialogEditThread from "./dialogEditThread";
+import Swal from "sweetalert2";
 
 interface ThreadByUserProps {
-  token: string; // Terima token sebagai props
+  token: string;
+  user: {
+    username: string;
+    email: string;
+  } | null;
 }
-
-export default function ThreadByUser({ token }: ThreadByUserProps) {
+export default function ThreadByUser({ token,user }: ThreadByUserProps) {
   const [threads, setThreads] = useState<ThreadsType[]>([]);
   const navigate = useNavigate();
   const {toggleLikeThread} = useThreadStore();
@@ -24,7 +29,7 @@ export default function ThreadByUser({ token }: ThreadByUserProps) {
       retrieveAllThreads();
       console.log("Threads updated:", threads);
     }
-  }, [token]); 
+  }, [token,threads]); 
 
   const retrieveAllThreads = async () => {
     try {
@@ -57,6 +62,29 @@ export default function ThreadByUser({ token }: ThreadByUserProps) {
       console.error("Failed to toggle like:", error);
     }
   };
+
+  const handleDeleteThread = async (threadId: number) => {
+      if (!token) {
+        console.error("Token is required to delete thread.");
+        return;
+      }
+    
+      try {
+        await useThreadStore.getState().deleteThread(threadId, token);
+        Swal.fire({
+          title: "Success",
+          text: "Thread has been deleted.",
+          icon: "success",
+        });
+      } catch (error) {
+        console.error("Failed to delete thread:", error);
+        Swal.fire({
+          title: "Error",
+          text: "There was an issue deleting the thread.",
+          icon: "error",
+        });
+      }
+    };
 
   return (
     <Box w="full" h="fit" mt="0" p="0">
@@ -101,9 +129,7 @@ export default function ThreadByUser({ token }: ThreadByUserProps) {
                   </Text>
                 </Link>
                 {thread.image && (
-                  <Link href="/DetailImage">
                     <Image src={thread.image} borderRadius="10px" w="93%" h="80%" />
-                  </Link>
                 )}
               </VStack>
               <HStack gap="7" display="flex" alignItems="center">
@@ -130,6 +156,21 @@ export default function ThreadByUser({ token }: ThreadByUserProps) {
                 </Text>
                   </Link>
                 </HStack>
+                {user?.username && thread.author?.username === user.username && (
+                <HStack>
+                  <DialogEditThread thread={thread} />
+                  <HStack display="flex" alignItems="center">
+                    <Text
+                      fontWeight="medium"
+                      color="red.500"
+                      style={{ fontSize: "11px", cursor: "pointer" }}
+                      onClick={() => handleDeleteThread(Number(thread.id))}
+                    >
+                      Delete
+                    </Text>
+                  </HStack>
+                </HStack>
+              )}
               </HStack>
             </VStack>
           </HStack>

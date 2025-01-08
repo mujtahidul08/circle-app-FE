@@ -78,7 +78,7 @@ export default function PrivateLayout() {
           top="0"
         >
           <VStack align="stretch">
-            {user && <ProfileUser user={user} />} {/* Render profile jika user ada */}
+            {user && <ProfileUser user={user} />} 
             <Suggest/>
           </VStack>
         </Box>

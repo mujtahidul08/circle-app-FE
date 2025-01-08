@@ -41,7 +41,9 @@ export default function DetailThread() {
       console.log("DetailThread.tsx Detail Thread",threadDetail)
       console.log("Current User", user);
       console.log("CurrentThread Image:", currentThread?.image);
+      
       console.log("Thread Image:", threadDetail.image);
+
     } catch (error) {
       console.error("Failed to fetch thread detail:", error);
     }
@@ -69,34 +71,13 @@ export default function DetailThread() {
     }
   };
 
-  // const handleDeleteThread = async () => {
-  //   try {
-  //     await axios.delete(`/api/thread/${id}`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-
-  //     Swal.fire({
-  //       title: "Success",
-  //       text: "Thread has been deleted.",
-  //       icon: "success",
-  //     });
-  //   } catch (error) {
-  //     console.error("Failed to delete thread:", error);
-  //     Swal.fire({
-  //       title: "Error",
-  //       text: "There was an issue deleting the thread.",
-  //       icon: "error",
-  //     });
-  //   }
-  // };
-
   return (
     <>
       {currentThread && (
         <Box className="p-3" borderBottomWidth="1px" borderColor="#3F3F3F" gap="4" overflowY="auto" scrollBehavior="smooth" scrollbar="hidden">
           <VStack className="p-3" gap="4" align="start">
             <HStack>
-              <Link href={`/profile/${currentThread.author.id}`}>
+              <Link href={`/profile/${currentThread?.authorId}`}>
                 <Image
                   src={currentThread.author.profile?.avatarImage || "https://bit.ly/naruto-sage"}
                   boxSize="40px"
@@ -104,7 +85,7 @@ export default function DetailThread() {
                   fit="cover"
                 />
               </Link>
-              <Link href={`/profile/${currentThread.author.id}`}>
+              <Link href={`/profile/${currentThread?.authorId}`}>
                 <Stack spaceY="-1.5">
                   <Text fontWeight="medium" textStyle="sm" color="white">
                     {currentThread.author.username}
@@ -150,7 +131,7 @@ export default function DetailThread() {
                 </DialogRoot>
                 </>
               ):(
-                <Text>No image available</Text>
+                <Text style={{fontSize: "0" }}></Text>
               )}
             </Stack>
             <HStack>

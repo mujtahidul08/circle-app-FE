@@ -27,7 +27,7 @@ export default function Thread() {
   // Ambil data user dari localStorage saat komponen pertama kali dimuat
   useEffect(() => {
     const userData = localStorage.getItem("user");
-    if (userData) {
+    if (userData) { 
       setUser(JSON.parse(userData)); // Parse data hanya sekali
     }
   }, []);

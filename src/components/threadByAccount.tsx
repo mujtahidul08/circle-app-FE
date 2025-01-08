@@ -107,9 +107,7 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
                   </Text>
                 </Link>
                 {thread.image && (
-                  <Link href="/DetailImage">
                     <Image src={thread.image} borderRadius="10px" w="93%" h="80%"/>
-                  </Link>
                 )}
               </VStack>
               <HStack gap="7" display="flex" alignItems="center">
