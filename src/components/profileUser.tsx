@@ -1,6 +1,5 @@
-import { Box, HStack, Image, Link, Stack, Text } from '@chakra-ui/react';
+import { Box, HStack, Image, Stack, Text } from '@chakra-ui/react';
 import DialogEditProfile from './dialogEditProfile';
-import useUserStore from '@/hooks/store/userStore';
 import useFollowStore from '@/hooks/store/followStore';
 
 export default function ProfileUser({ user }: { user: any }) {

@@ -74,7 +74,7 @@ export default function DialogEditProfile({ user }: { user: any }) {
       if (backgroundFile) formData.append("backgroundImage", backgroundFile);
   
       // Kirim formData ke API
-      const response = await updateProfile(token, formData);
+      await updateProfile(token, formData);
       await fetchProfile(token); 
       
       Swal.fire({

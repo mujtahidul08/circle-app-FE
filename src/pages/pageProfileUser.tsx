@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Box, Tabs, Text } from "@chakra-ui/react";
 import ThreadByUser from "@/components/threadByUser";
 import useUserStore from "@/hooks/store/userStore";
-import axios from "axios";
 import ProfileUser from "@/components/profileUser";
 import ImageByUser from "@/components/imageByUser";
 

@@ -1,15 +1,14 @@
-import { toggleFollow } from "@/features/dashboard/services/profile.services";
 import useFollowStore from "@/hooks/store/followStore";
 import useUserStore from "@/hooks/store/userStore";
 // import useSuggestedUserStore from "@/hooks/store/suggestedUserStore";
-import { Box, Button, HStack, Image, Link, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Link, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
 export default function Suggest() {
   const { suggestedUsers, toggleFollow } = useFollowStore();
   const { token } = useUserStore();
   const [loading, setLoading] = useState(false);
-
+  console.log(loading)
   if (!suggestedUsers || suggestedUsers.length === 0) {
     return <Text color="white">No suggested users available</Text>;
   }

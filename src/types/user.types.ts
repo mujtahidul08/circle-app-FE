@@ -10,4 +10,6 @@ export interface userType {
   followers?: number;
   following?: number;
   isFollowed?: boolean;
+  avatar?:string;
+  image?:string;
 };

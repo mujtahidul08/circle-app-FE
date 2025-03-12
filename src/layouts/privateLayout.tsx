@@ -8,15 +8,19 @@ import { useEffect, useState } from "react";
 import useUserStore from "@/hooks/store/userStore";
 import useFollowStore from "@/hooks/store/followStore";
 import { fetchFollowers, fetchFollowing } from "@/features/dashboard/services/profile.services";
-import { ChakraProvider } from '@chakra-ui/react';
+import { userType } from "@/types/user.types";
 
+interface PrivateLayoutProps {
+  user: userType;
+}
 
-export default function PrivateLayout() {
+const PrivateLayout: React.FC<PrivateLayoutProps> = () => {
+// export default function PrivateLayout() {
   const { fetchSuggestedUsers, updateCounts,updateFollowers,updateFollowing} = useFollowStore();
   const [loadingSuggestedUsers, setLoadingSuggestedUsers] = useState(true);
   const { token, user, fetchProfile } = useUserStore();
   
-
+  console.log(loadingSuggestedUsers)
   useEffect(() => {
     const loadSuggestedUsers = async () => {
       try {
@@ -87,3 +91,5 @@ export default function PrivateLayout() {
     </>
   );
 }
+
+export default PrivateLayout;

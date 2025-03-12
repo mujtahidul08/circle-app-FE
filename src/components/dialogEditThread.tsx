@@ -1,4 +1,4 @@
-import { Button, HStack, Image, Input, Box, Text } from '@chakra-ui/react';
+import { Button, Image, Input, Box, Text } from '@chakra-ui/react';
 import { BiImageAdd } from 'react-icons/bi';
 import {
   DialogBody,
@@ -9,9 +9,7 @@ import {
   DialogRoot,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useNavigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
-import { createThread } from '@/features/dashboard/services/thread.services';
 import Swal from 'sweetalert2';
 import useUserStore from '@/hooks/store/userStore';
 import { useThreadStore } from '@/hooks/store/threadStore';

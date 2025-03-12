@@ -8,7 +8,7 @@ export type UserContextType = {
 
 export const UserContext = createContext<UserContextType>({
   user: {
-    id: "",
+    id: 0,
     username: "",
     email: "",
     profile: { bio: "", avatarImage: "" },
@@ -20,7 +20,7 @@ export const UserContext = createContext<UserContextType>({
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<userType>({
-    id: "1",
+    id: 1,
     username: "mujtahidul",
     email: "mujtahidul@gmail.com",
     profile: { bio: "Bio default", avatarImage: "" },

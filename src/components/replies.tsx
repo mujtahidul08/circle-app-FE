@@ -15,7 +15,8 @@ interface RepliesProps {
   threadId: string;
 }
 // Di dalam function Replies
-const Replies: React.FC<RepliesProps> = ({ threadId }) => {
+// const Replies: React.FC<RepliesProps> = ({ threadId }) => {
+const Replies: React.FC<RepliesProps> = () => {
   const { id } = useParams<{ id: string }>();
   const { token } = useUserStore();
   const { replies, fetchReplies,toggleLikeReply  } = useReplyStore();

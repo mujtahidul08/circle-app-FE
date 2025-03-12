@@ -1,6 +1,6 @@
 import { getAllThreadsByUser } from "@/features/dashboard/services/profile.services";
 import { ThreadsType } from "@/types/thread.types";
-import { Box, Grid, Image, Link, Text } from "@chakra-ui/react";
+import { Box, Grid, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 interface ImageByUserProps {

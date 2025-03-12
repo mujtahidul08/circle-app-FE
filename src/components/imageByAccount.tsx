@@ -1,7 +1,7 @@
 import { getAllByAccount } from "@/features/dashboard/services/profile.services";
 import useUserStore from "@/hooks/store/userStore";
 import { ThreadsType } from "@/types/thread.types";
-import { Box, Grid, Image, Link, Text } from "@chakra-ui/react";
+import { Box, Grid, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 interface ThreadByAccountProps {

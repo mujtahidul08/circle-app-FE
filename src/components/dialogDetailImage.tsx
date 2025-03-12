@@ -1,5 +1,4 @@
 import { Box, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, DialogTrigger, HStack, Image, VStack } from "@chakra-ui/react";
-import DetailPost from "../pages/detailThread";
 import DetailThread from "../pages/detailThread";
 import DialogCreateReply from "./dialogCreateReply";
 import Replies from "./replies";
@@ -14,7 +13,7 @@ import { getThreadById } from "@/features/dashboard/services/thread.services";
 export default function DialogDetailImage(){
 const { id } = useParams<{ id: string }>();
   const { token, user } = useUserStore();
-  const { currentThread, setCurrentThread, clearThread, toggleLikeThread } = useThreadStore();
+  const { currentThread, setCurrentThread, clearThread } = useThreadStore();
   const { fetchReplies } = useReplyStore();
   const { updateCounts } = useFollowStore(); // Ambil fungsi updateCounts dari useFollowStore
 

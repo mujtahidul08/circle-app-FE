@@ -1,3 +1,4 @@
+
 import PrivateLayout from "@/layouts/privateLayout";
 import { userType } from "@/types/user.types";
 import { apiURL } from "@/utils/baseurl";
