@@ -25,12 +25,12 @@ export const getAllUser = (token:string) => {
     }
 
 export async function forgotPassword(email: string) {
-  const response = await axios.post('http://localhost:3000/api/users/forgot', { email });
+  const response = await axios.post(`${apiURL}api/users/forgot`, { email });
   return response.data;
 }
 
 export async function resetPassword(token: string, newPassword: string) {
-  const response = await axios.put(`http://localhost:3000/api/users/reset?token=${token}`, {
+  const response = await axios.put(`${apiURL}api/users/reset?token=${token}`, {
     newPassword,
   });
   return response.data;

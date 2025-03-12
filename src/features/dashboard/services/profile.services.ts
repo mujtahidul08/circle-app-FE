@@ -1,6 +1,6 @@
 import useFollowStore from "@/hooks/store/followStore";
 import useUserStore from "@/hooks/store/userStore";
-import {Follower, Following } from "@/types/profile.types";
+import {Follower} from "@/types/profile.types";
 import { apiURL } from "@/utils/baseurl";
 import axios from "axios";
 
@@ -111,7 +111,7 @@ export const getAllThreadsByUser = async (token: string) => {
 export const fetchFollowers = async (token: string): Promise<Follower[]> => {
   try {
     const response = await axios.get<{ followers: Follower[] }>(
-      "http://localhost:3000/api/profile/followers",
+      `${apiURL}api/profile/followers`,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Kirim token dalam header

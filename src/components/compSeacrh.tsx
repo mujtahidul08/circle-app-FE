@@ -1,7 +1,6 @@
 import { Box, Input, Spinner, VStack, Text, HStack, Image, Stack, Button, Link } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
-import { useSuggestedUsers } from "@/hooks/contexts/suggestedUserContext";
 import useFollowStore from "@/hooks/store/followStore";
 
 export default function CompSearch() {
@@ -9,13 +8,13 @@ export default function CompSearch() {
   const [searchResults, setSearchResults] = useState<any[]>([]); 
   const [isLoading, setIsLoading] = useState<boolean>(false); 
   const { following, toggleFollow } = useFollowStore();
-
+  const apiURL = import.meta.env.VITE_API_URL
   // Fetch search results
   const fetchSearchResults = async (searchQuery: string) => {
     setIsLoading(true);
 
     try {
-      const response = await axios.get("http://localhost:3000/api/search", {
+      const response = await axios.get(apiURL+"api/search", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, 
         },

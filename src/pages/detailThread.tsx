@@ -13,6 +13,7 @@ import axios from "axios";
 import { useThreadStore } from "@/hooks/store/threadStore";
 import { useReplyStore } from "@/hooks/store/replyStore";
 import useFollowStore from "@/hooks/store/followStore";
+import { apiURL } from "@/utils/baseurl";
 
 export default function DetailThread() {
   const { id } = useParams<{ id: string }>();
@@ -57,7 +58,7 @@ export default function DetailThread() {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/thread/like/${threadId}`,
+        `${apiURL}api/thread/like/${threadId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

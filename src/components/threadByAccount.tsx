@@ -2,6 +2,7 @@ import { getAllByAccount } from "@/features/dashboard/services/profile.services"
 import { useThreadStore } from "@/hooks/store/threadStore";
 import useUserStore from "@/hooks/store/userStore";
 import { ThreadsType } from "@/types/thread.types";
+import { apiURL } from "@/utils/baseurl";
 import { getRelativeTime } from "@/utils/getRelativeTimes";
 import { Box, HStack, Image, Link, Text, VStack } from "@chakra-ui/react";
 import axios from "axios";
@@ -49,7 +50,7 @@ export default function ThreadByAccount({ authorId }: ThreadByAccountProps) {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/thread/like/${threadId}`,
+        `${apiURL}api/thread/like/${threadId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

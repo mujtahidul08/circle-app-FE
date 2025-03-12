@@ -30,7 +30,7 @@ export const SuggestedUserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const response = await axios.get("http://localhost:3000/api/profile/suggested", {
+      const response = await axios.get(`${apiURL}api/profile/suggested`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +48,7 @@ export const SuggestedUserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const response = await axios.post(
+      await axios.post(
         apiURL+`api/profile/follow/${userId}`,
         {},
         {

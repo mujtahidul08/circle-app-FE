@@ -23,7 +23,7 @@ export default function ThreadByUser({ token,user }: ThreadByUserProps) {
   const [threads, setThreads] = useState<ThreadsType[]>([]);
   const navigate = useNavigate();
   const {toggleLikeThread} = useThreadStore();
-
+  const apiURL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
   useEffect(() => {
     if (token) {
       retrieveAllThreads();
@@ -48,7 +48,7 @@ export default function ThreadByUser({ token,user }: ThreadByUserProps) {
   
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/thread/like/${threadId}`,
+        `${apiURL}api/thread/like/${threadId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

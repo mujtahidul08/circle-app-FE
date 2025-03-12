@@ -23,7 +23,7 @@ export default function Thread() {
   const [user, setUser] = useState<{ username: string; email: string } | null>(null);
   const [selectedThread, setSelectedThread] = useState<ThreadsType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const apiURL = import.meta.env.VITE_API_URL
   // Ambil data user dari localStorage saat komponen pertama kali dimuat
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -31,7 +31,8 @@ export default function Thread() {
       setUser(JSON.parse(userData)); // Parse data hanya sekali
     }
   }, []);
-
+  console.log(isDialogOpen)
+  console.log(selectedThread)
   useEffect(() => {
     if (token) {
       fetchThreads(token).then(() => {
@@ -48,7 +49,7 @@ export default function Thread() {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/thread/like/${threadId}`,
+        apiURL+`api/thread/like/${threadId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

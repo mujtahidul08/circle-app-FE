@@ -5,6 +5,7 @@ import { z } from "zod";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { apiURL } from "@/utils/baseurl";
 
 const registerSchema = z.object({
   email: z.string().email("ivalid email"),
@@ -23,7 +24,7 @@ export default function Register() {
   const onSubmit = async (data: RegisterFormInputs) => {
     console.log(data);
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/register", data);
+      const response = await axios.post(`${apiURL}api/auth/register`, data);
       console.log(response.data);
 
       Swal.fire({
